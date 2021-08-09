@@ -56,7 +56,7 @@ public class KlabDbRacePage {
 	 */
 	public KlabDbRacePage(String kaisaiYmd, String keibajoCd, int raceNo) {
 		// URL を取得する
-		this.url = String.format(BASE_URL, kaisaiYmd + keibajoNmCdMap.get(keibajoCd) + String.format("%2d", raceNo));
+		this.url = String.format(BASE_URL, kaisaiYmd + keibajoNmCdMap.get(keibajoCd) + String.format("%02d", raceNo));
 		// URL へアクセスしてページコンテンツを取得する
 		try {
 			this.document = Jsoup.connect(this.url).timeout(30_000).get();
