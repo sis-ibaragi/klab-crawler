@@ -10,8 +10,8 @@ import lombok.Data;
 import lombok.NonNull;
 
 /**
+ * レース結果を保持するクラスです。
  * @author ibaragi
- *
  */
 @Data
 public class RaceRsltListModel {
@@ -25,7 +25,7 @@ public class RaceRsltListModel {
 	private Integer raceNo;
 
 	/** RaceRsltModel の List */
-	private List<RaceRsltModel> raceRsltList = new ArrayList<RaceRsltModel>();
+	private List<RaceRsltModel> raceRsltList = new ArrayList<>();
 
 	/**
 	 * パラメータの RaceRsltModel をこのクラスが保持する RaceRsltModel の List へ追加します。

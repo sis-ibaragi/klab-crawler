@@ -6,8 +6,9 @@ package klab.rslt.crawler.model;
 import lombok.Data;
 
 /**
+ * レース結果の 1 レコードを保持するクラスです。
+ * 
  * @author ibaragi
- *
  */
 @Data
 public class RaceRsltModel {
@@ -45,6 +46,7 @@ public class RaceRsltModel {
 
 	/**
 	 * 着順を Integer 型に変換して返します。
+	 * 
 	 * @return 着順（Integer 型）
 	 */
 	public Integer getOrderNoInt() {
@@ -57,6 +59,7 @@ public class RaceRsltModel {
 
 	/**
 	 * 馬番を Integer 型に変換して返します。
+	 * 
 	 * @return 馬番（Integer 型）
 	 */
 	public Integer getUmaNo() {
