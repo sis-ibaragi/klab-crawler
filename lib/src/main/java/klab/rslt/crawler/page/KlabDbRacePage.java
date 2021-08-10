@@ -4,6 +4,8 @@
 package klab.rslt.crawler.page;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -74,18 +76,18 @@ public class KlabDbRacePage {
 	/**
 	 * コンストラクタ.
 	 * 
-	 * @param kaisaiYmd 開催日
+	 * @param kaisaiDt  開催日
 	 * @param keibajoCd 競馬場コード（独自）
 	 * @param raceNo    レース番号
 	 */
-	public KlabDbRacePage(@NonNull String kaisaiCd, @NonNull String kaisaiYmd, int raceNo) {
+	public KlabDbRacePage(@NonNull String kaisaiCd, @NonNull LocalDate kaisaiDt, int raceNo) {
 		// パラメータを取得
 		this.kaisaiCd = kaisaiCd;
 		this.raceNo = raceNo;
 
 		// URL を取得する
-		this.url = String.format(BASE_URL,
-				kaisaiYmd + keibajoNmCdMap.get(kaisaiCd.substring(6, 8)) + String.format("%02d", raceNo));
+		this.url = String.format(BASE_URL, kaisaiDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+				+ keibajoNmCdMap.get(kaisaiCd.substring(6, 8)) + String.format("%02d", raceNo));
 		log.debug(this.url);
 		// URL へアクセスしてページコンテンツを取得する
 		try {
