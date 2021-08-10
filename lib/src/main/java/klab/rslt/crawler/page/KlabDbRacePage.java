@@ -4,7 +4,6 @@
 package klab.rslt.crawler.page;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,6 +20,8 @@ import klab.rslt.crawler.model.RaceRsltDividendTtioModel;
 import klab.rslt.crawler.model.RaceRsltDividendUmrnModel;
 import klab.rslt.crawler.model.RaceRsltListModel;
 import klab.rslt.crawler.model.RaceRsltModel;
+import lombok.Data;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -29,13 +30,14 @@ import lombok.extern.slf4j.Slf4j;
  * @author ibaragi
  */
 @Slf4j
+@Data
 public class KlabDbRacePage {
 
 	/** ベース URL */
 	private static final String BASE_URL = "https://www.keibalab.jp/db/race/%s/";
 
 	/** 競馬場コード（独自）と競馬場コード（競馬ラボ）の Map */
-	public static Map<String, String> keibajoNmCdMap;
+	private static Map<String, String> keibajoNmCdMap;
 	static {
 		Map<String, String> map = new HashMap<>();
 		map.put("SP", "01"); // 札幌
@@ -67,7 +69,7 @@ public class KlabDbRacePage {
 	private RaceRsltListModel rsltModel;
 
 	/** レース払い戻し */
-	private RaceRsltDividendModel divModel;
+	private RaceRsltDividendModel dividendModel;
 
 	/**
 	 * コンストラクタ.
@@ -76,7 +78,7 @@ public class KlabDbRacePage {
 	 * @param keibajoCd 競馬場コード（独自）
 	 * @param raceNo    レース番号
 	 */
-	public KlabDbRacePage(String kaisaiCd, String kaisaiYmd, int raceNo) {
+	public KlabDbRacePage(@NonNull String kaisaiCd, @NonNull String kaisaiYmd, int raceNo) {
 		// パラメータを取得
 		this.kaisaiCd = kaisaiCd;
 		this.raceNo = raceNo;
@@ -121,10 +123,10 @@ public class KlabDbRacePage {
 			model.setHorseWeight(cols.get(14).text()); // 馬体重
 			return model;
 		}).collect(Collectors.toList()));
-		log.debug(rsltModel.toString());
+		// log.debug(rsltModel.toString());
 
 		// 払い戻しを RaceRsltDividendModel へ設定する
-		this.divModel = new RaceRsltDividendModel(this.kaisaiCd, this.raceNo);
+		this.dividendModel = new RaceRsltDividendModel(this.kaisaiCd, this.raceNo);
 		this.document.select("div.haraimodoshi table tr").stream().forEach(element -> {
 			Elements cols = element.select("td");
 			String firstCol = cols.get(0).text();
@@ -133,7 +135,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(1).text().split("\s");
 					String[] divYenArr = cols.get(2).text().split("\s");
-					divModel.setTanList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setTanList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTnpkModel model = new RaceRsltDividendTnpkModel();
 						model.setUmaNo(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -144,7 +146,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(4).text().split("\s");
 					String[] divYenArr = cols.get(5).text().split("\s");
-					divModel.setUmtnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setUmtnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -156,7 +158,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(1).text().split("\s");
 					String[] divYenArr = cols.get(2).text().split("\s");
-					divModel.setFukuList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setFukuList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTnpkModel model = new RaceRsltDividendTnpkModel();
 						model.setUmaNo(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -167,7 +169,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(4).text().split("\s");
 					String[] divYenArr = cols.get(5).text().split("\s");
-					divModel.setWideList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setWideList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -178,7 +180,7 @@ public class KlabDbRacePage {
 				// 3 連複
 				String[] umaNoArr = cols.get(4).text().split("\s");
 				String[] divYenArr = cols.get(5).text().split("\s");
-				divModel.setTrioList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+				dividendModel.setTrioList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 					RaceRsltDividendTtioModel model = new RaceRsltDividendTtioModel();
 					model.setUmaNoSeq(umaNoArr[i]);
 					model.setDividendYen(divYenArr[i]);
@@ -189,7 +191,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(1).text().split("\s");
 					String[] divYenArr = cols.get(2).text().split("\s");
-					divModel.setUmrnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setUmrnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -200,7 +202,7 @@ public class KlabDbRacePage {
 				{
 					String[] umaNoArr = cols.get(4).text().split("\s");
 					String[] divYenArr = cols.get(5).text().split("\s");
-					divModel.setTrifectaList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
+					dividendModel.setTrifectaList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTtioModel model = new RaceRsltDividendTtioModel();
 						model.setUmaNoSeq(umaNoArr[i]);
 						model.setDividendYen(divYenArr[i]);
@@ -209,7 +211,7 @@ public class KlabDbRacePage {
 				}
 			}
 		});
-		log.debug(divModel.toString());
+		// log.debug(divModel.toString());
 		return this;
 	}
 

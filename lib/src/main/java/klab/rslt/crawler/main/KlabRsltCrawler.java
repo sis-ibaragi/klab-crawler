@@ -5,6 +5,9 @@ package klab.rslt.crawler.main;
 
 import java.io.IOException;
 import java.util.Properties;
+import java.util.stream.IntStream;
+
+import org.jdbi.v3.core.Jdbi;
 
 import klab.rslt.crawler.page.KlabDbRacePage;
 import lombok.Data;
@@ -68,9 +71,25 @@ public class KlabRsltCrawler {
 	}
 
 	/**
-	 * .
+	 * スクレイピングと DB への保存を実行します。
 	 */
 	private void execute() {
-		new KlabDbRacePage("202103NG06", "20210808", 8).parse();
+		Jdbi jdbi = Jdbi.create(this.dbProperties.getDatabase(), this.dbProperties.getUsername(),
+				this.dbProperties.getPassword());
+		jdbi.useHandle(handle -> {
+			handle.useTransaction(h -> {
+				// TODO レース結果を取得する対象リストを取得する
+				IntStream.range(0, 1).forEach(i -> {
+					// TODO 対象 Web ページを解析してレース結果・払戻金を取得する
+					// KlabDbRacePage page = new KlabDbRacePage("202103NG06", "20210808", 8).parse();
+					KlabDbRacePage page = new KlabDbRacePage("202005HN07", "20201123", 12).parse();
+					// TODO 取得した情報を DB へ保存する
+					page.getRsltModel().insertRaceRsltList(handle);
+					page.getDividendModel().insertaceRsltDividend(handle);
+				});
+				// コミットする
+				handle.commit();
+			});
+		});
 	}
 }

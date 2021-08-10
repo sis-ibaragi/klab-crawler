@@ -6,14 +6,19 @@ package klab.rslt.crawler.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jdbi.v3.core.Handle;
+
 import lombok.Data;
 import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * レース結果を保持するクラスです。
+ * 
  * @author ibaragi
  */
 @Data
+@Slf4j
 public class RaceRsltListModel {
 
 	/** 開催コード */
@@ -39,10 +44,10 @@ public class RaceRsltListModel {
 	/**
 	 * RaceRsltModel の List を RACE_RSLT テーブルへ登録します。
 	 */
-	public int insertRaceRsltList() {
-		this.raceRsltList.forEach(mode -> {
+	public void insertRaceRsltList(Handle handle) {
+		this.raceRsltList.forEach(model -> {
 			// TODO 未実装
+			log.debug("Insert: {}", model.toString());
 		});
-		return this.raceRsltList.size();
 	}
 }
