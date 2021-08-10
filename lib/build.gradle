@@ -25,6 +25,9 @@ dependencies {
     // https://mvnrepository.com/artifact/org.jsoup/jsoup
     implementation 'org.jsoup:jsoup:1.14.1'
 
+    // https://mvnrepository.com/artifact/org.jdbi/jdbi3-core
+    implementation 'org.jdbi:jdbi3-core:3.21.0'
+
     // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
     implementation 'org.slf4j:slf4j-api:1.7.32'
     
