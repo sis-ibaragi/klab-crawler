@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.jdbi.v3.core.Handle;
 
+import klab.rslt.crawler.entity.RaceRsltEntity;
 import lombok.Data;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,11 @@ public class RaceRsltListModel {
 		this.raceRsltList.forEach(model -> {
 			// TODO 未実装
 			log.debug("Insert: {}", model.toString());
+			// INSERT を実行する
+			handle.createUpdate(RaceRsltEntity.getInsertSql())
+					.bindBean(
+							new RaceRsltEntity(this.kaisaiCd, this.raceNo, model.getUmaNoInt(), model.getOrderNoInt()))
+					.execute();
 		});
 	}
 }

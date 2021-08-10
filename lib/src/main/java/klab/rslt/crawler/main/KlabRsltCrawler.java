@@ -105,13 +105,15 @@ public class KlabRsltCrawler {
 					handle.registerRowMapper(BeanMapper.factory(SelectTargetRaceListEntity.class));
 					handle.select(SelectTargetRaceListEntity.getSql()).mapTo(SelectTargetRaceListEntity.class)
 							.forEach(entity -> {
-								// 対象 Web ページを解析してレース結果・払戻金を取得する
 								try {
+									// 対象 Web ページを解析してレース結果・払戻金を取得する
 									KlabDbRacePage page = new KlabDbRacePage(entity.getKaisaiCd(), entity.getKaisaiDt(),
 											entity.getRaceNo()).parse();
+
 									// TODO 取得した情報を DB へ保存する
 									page.getRsltModel().insertRaceRsltList(handle);
 									page.getDividendModel().insertaceRsltDividend(handle);
+
 									// 成功件数をカウントアップする
 									successCnt.incrementAndGet();
 								} catch (Exception e) {

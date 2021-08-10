@@ -62,7 +62,7 @@ public class RaceRsltModel {
 	 * 
 	 * @return 馬番（Integer 型）
 	 */
-	public Integer getUmaNo() {
+	public Integer getUmaNoInt() {
 		return Integer.valueOf(this.umaNo);
 	}
 }
