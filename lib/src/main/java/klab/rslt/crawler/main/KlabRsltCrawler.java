@@ -11,13 +11,13 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * 競馬ラボのレース結果ページをスクレイピングするメインクラスです。
+ * 
  * @author ibaragi
- *
  */
 @Slf4j
 public class KlabRsltCrawler {
 
-	
 	/**
 	 * database.properties のデータ構造を表すクラスです。
 	 */
@@ -52,6 +52,7 @@ public class KlabRsltCrawler {
 
 	/**
 	 * このクラスのメインメソッドです。
+	 * 
 	 * @param args コマンドライン引数
 	 */
 	public static void main(String[] args) {
@@ -70,6 +71,6 @@ public class KlabRsltCrawler {
 	 * .
 	 */
 	private void execute() {
-		new KlabDbRacePage("20210808", "NG", 8).parse();
+		new KlabDbRacePage("202103NG06", "20210808", 8).parse();
 	}
 }
