@@ -134,8 +134,8 @@ public class KlabDbRacePage {
 			if (firstCol.equals("単勝")) {
 				// 単勝
 				{
-					String[] umaNoArr = cols.get(1).text().split("\s");
-					String[] divYenArr = cols.get(2).text().split("\s");
+					String[] umaNoArr = cols.get(1).text().split("\\s");
+					String[] divYenArr = cols.get(2).text().split("\\s");
 					dividendModel.setTanList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTnpkModel model = new RaceRsltDividendTnpkModel();
 						model.setUmaNo(umaNoArr[i]);
@@ -145,8 +145,8 @@ public class KlabDbRacePage {
 				}
 				// 馬単
 				{
-					String[] umaNoArr = cols.get(4).text().split("\s");
-					String[] divYenArr = cols.get(5).text().split("\s");
+					String[] umaNoArr = cols.get(4).text().split("\\s");
+					String[] divYenArr = cols.get(5).text().split("\\s");
 					dividendModel.setUmtnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
@@ -157,8 +157,8 @@ public class KlabDbRacePage {
 			} else if (firstCol.equals("複勝")) {
 				// 複勝
 				{
-					String[] umaNoArr = cols.get(1).text().split("\s");
-					String[] divYenArr = cols.get(2).text().split("\s");
+					String[] umaNoArr = cols.get(1).text().split("\\s");
+					String[] divYenArr = cols.get(2).text().split("\\s");
 					dividendModel.setFukuList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTnpkModel model = new RaceRsltDividendTnpkModel();
 						model.setUmaNo(umaNoArr[i]);
@@ -168,8 +168,8 @@ public class KlabDbRacePage {
 				}
 				// ワイド
 				{
-					String[] umaNoArr = cols.get(4).text().split("\s");
-					String[] divYenArr = cols.get(5).text().split("\s");
+					String[] umaNoArr = cols.get(4).text().split("\\s");
+					String[] divYenArr = cols.get(5).text().split("\\s");
 					dividendModel.setWideList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
@@ -179,8 +179,8 @@ public class KlabDbRacePage {
 				}
 			} else if (firstCol.equals("枠連")) {
 				// 3 連複
-				String[] umaNoArr = cols.get(4).text().split("\s");
-				String[] divYenArr = cols.get(5).text().split("\s");
+				String[] umaNoArr = cols.get(4).text().split("\\s");
+				String[] divYenArr = cols.get(5).text().split("\\s");
 				dividendModel.setTrioList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 					RaceRsltDividendTtioModel model = new RaceRsltDividendTtioModel();
 					model.setUmaNoSeq(umaNoArr[i]);
@@ -190,8 +190,8 @@ public class KlabDbRacePage {
 			} else if (firstCol.equals("馬連")) {
 				// 馬連
 				{
-					String[] umaNoArr = cols.get(1).text().split("\s");
-					String[] divYenArr = cols.get(2).text().split("\s");
+					String[] umaNoArr = cols.get(1).text().split("\\s");
+					String[] divYenArr = cols.get(2).text().split("\\s");
 					dividendModel.setUmrnList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendUmrnModel model = new RaceRsltDividendUmrnModel();
 						model.setUmaNoSeq(umaNoArr[i]);
@@ -201,8 +201,8 @@ public class KlabDbRacePage {
 				}
 				// 3 連単
 				{
-					String[] umaNoArr = cols.get(4).text().split("\s");
-					String[] divYenArr = cols.get(5).text().split("\s");
+					String[] umaNoArr = cols.get(4).text().split("\\s");
+					String[] divYenArr = cols.get(5).text().split("\\s");
 					dividendModel.setTrifectaList(IntStream.range(0, umaNoArr.length).mapToObj(i -> {
 						RaceRsltDividendTtioModel model = new RaceRsltDividendTtioModel();
 						model.setUmaNoSeq(umaNoArr[i]);

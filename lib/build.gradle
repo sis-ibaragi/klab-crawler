@@ -9,11 +9,11 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java-library'
+    id 'com.github.johnrengelman.shadow' version '7.0.0'
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(11)
 tasks.withType(JavaCompile) {options.encoding = 'UTF-8'}
-
 version = '0.1.0'
 
 repositories {
@@ -36,6 +36,9 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     compileOnly 'org.projectlombok:lombok:1.18.20'
+    annotationProcessor 'org.projectlombok:lombok:1.18.20'
+    testCompileOnly 'org.projectlombok:lombok:1.18.20'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.20'
 
     // https://mvnrepository.com/artifact/org.mariadb.jdbc/mariadb-java-client
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client:2.7.3'
@@ -45,10 +48,18 @@ dependencies {
 }
 
 tasks.named('jar') {
+    baseName = 'jra-odds-crawler'
     manifest {
-        attributes('Implementation-Title': project.name,
+        attributes 'Main-Class' : 'klab.rslt.crawler.main.KlabRsltCrawler'
+        attributes 'Class-Path' : '../conf/'
+        attributes('Implementation-Title': rootProject.name,
                    'Implementation-Version': project.version)
     }
+}
+
+tasks.named('shadowJar') {
+   archiveBaseName.set(rootProject.name)
+   archiveVersion.set(project.version)
 }
 
 tasks.named('test') {
