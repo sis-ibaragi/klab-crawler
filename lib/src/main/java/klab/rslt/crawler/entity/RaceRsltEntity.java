@@ -32,6 +32,9 @@ public class RaceRsltEntity {
 	/** 着順 */
 	private Integer orderNo;
 
+	/** レース結果区分 */
+	private Integer raceRsltDiv;
+
 	/**
 	 * このクラスが保持する INSERT 用 SQL を返します。
 	 * 

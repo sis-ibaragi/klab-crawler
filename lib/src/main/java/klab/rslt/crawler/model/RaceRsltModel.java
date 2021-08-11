@@ -3,6 +3,7 @@
  */
 package klab.rslt.crawler.model;
 
+import klab.rslt.crawler.constant.RaceRsltDiv;
 import lombok.Data;
 
 /**
@@ -64,5 +65,17 @@ public class RaceRsltModel {
 	 */
 	public Integer getUmaNoInt() {
 		return Integer.valueOf(this.umaNo);
+	}
+
+	/**
+	 * 着順のオリジナル値からレース結果区分を返します。
+	 * 
+	 * @return レース結果区分
+	 */
+	public Integer getRaceRsltDiv() {
+		if (this.getOrderNoInt() == null) {
+			return RaceRsltDiv.getByLabel(this.getOrderNo()).getId();
+		}
+		return RaceRsltDiv.FINISH.getId();
 	}
 }

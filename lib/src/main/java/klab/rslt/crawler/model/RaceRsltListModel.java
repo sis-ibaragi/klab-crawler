@@ -49,12 +49,10 @@ public class RaceRsltListModel {
 	 */
 	public void insertRaceRsltList(Handle handle) {
 		this.raceRsltList.forEach(model -> {
-			log.debug("Insert: {}", model.toString());
+			log.debug("レース結果: {}", model.toString());
 			// INSERT を実行する
-			handle.createUpdate(RaceRsltEntity.getInsertSql())
-					.bindBean(
-							new RaceRsltEntity(this.kaisaiCd, this.raceNo, model.getUmaNoInt(), model.getOrderNoInt()))
-					.execute();
+			handle.createUpdate(RaceRsltEntity.getInsertSql()).bindBean(new RaceRsltEntity(this.kaisaiCd, this.raceNo,
+					model.getUmaNoInt(), model.getOrderNoInt(), model.getRaceRsltDiv())).execute();
 		});
 	}
 }
