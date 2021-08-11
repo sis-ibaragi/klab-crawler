@@ -77,14 +77,17 @@ public class KlabRsltCrawler {
 	 */
 	public static void main(String[] args) {
 		log.info("処理を開始します。");
+		int exitCd = 0;
 		KlabRsltCrawler main = new KlabRsltCrawler();
 		try {
 			main.execute();
 		} catch (Exception e) {
+			exitCd = 9;
 			log.error("処理中にエラーが発生しました。", e);
 		} finally {
 			log.info("処理が終了しました。");
 		}
+		System.exit(exitCd);
 	}
 
 	/**
@@ -98,6 +101,9 @@ public class KlabRsltCrawler {
 		// 各種閾値
 		final int commitThresholdCnt = 12;
 		final int httpErrorThresholdCnt = 5;
+
+		// ページアクセスごとのスリープ間隔
+		final long sleepMsec = 2_000;
 
 		// 成功・失敗・コミット待ち件数のカウンター
 		AtomicInteger successCnt = new AtomicInteger();
@@ -137,9 +143,17 @@ public class KlabRsltCrawler {
 									// 一定件数以上の HTTP エラーが発生した場合は終了する
 									if (e.getCause() instanceof IOException) {
 										if (httpErrorCnt.incrementAndGet() >= httpErrorThresholdCnt) {
-											throw new RuntimeException(String.format("処理中に %d 件以上エラーが発生したため終了します。",
-													httpErrorThresholdCnt));
+											throw new RuntimeException(String.format(
+													"処理中に %d 件以上の HTTP エラーが発生したため終了します。", httpErrorThresholdCnt));
 										}
+									}
+								} finally {
+									// ページアクセスごとにスリープする
+									try {
+										Thread.sleep(sleepMsec);
+									} catch (InterruptedException e) {
+										// ここでのエラーは無視する
+										log.warn("Thred.sleep でエラーが発生しました。", e);
 									}
 								}
 							});
