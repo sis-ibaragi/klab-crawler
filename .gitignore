@@ -5,8 +5,9 @@ gradlew
 gradlew.bat
 
 # Ignore Gradle build output directory
-build
-lib/bin
+klab-rslt-crawler/build/
+klab-rslt-crawler/bin/
+
 
 # Ignore Configuration file
-lib/conf/*.properties
+klab-rslt-crawler/conf/*.properties

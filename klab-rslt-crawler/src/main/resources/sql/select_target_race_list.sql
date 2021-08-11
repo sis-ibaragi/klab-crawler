@@ -17,7 +17,6 @@ where
 				rs.KAISAI_CD = ka.KAISAI_CD
 			and rs.RACE_NO = ra.RACE_NO
 	)
-and	ka.KAISAI_DT between '2021-08-01' and '2021-08-01'
 order by
 	KAISAI_CD,
 	RACE_NO

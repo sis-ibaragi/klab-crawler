@@ -52,14 +52,9 @@ tasks.named('jar') {
     manifest {
         attributes 'Main-Class' : 'klab.rslt.crawler.main.KlabRsltCrawler'
         attributes 'Class-Path' : '../conf/'
-        attributes('Implementation-Title': rootProject.name,
+        attributes('Implementation-Title': project.name,
                    'Implementation-Version': project.version)
     }
-}
-
-tasks.named('shadowJar') {
-   archiveBaseName.set(rootProject.name)
-   archiveVersion.set(project.version)
 }
 
 tasks.named('test') {
