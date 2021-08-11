@@ -1,0 +1,4 @@
+## database connection settings.
+database=jdbc:mariadb://<dbhost>/<dbname>
+username=<dbuser>
+password=<dbpass>

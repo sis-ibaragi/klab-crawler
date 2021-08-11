@@ -7,3 +7,6 @@ gradlew.bat
 # Ignore Gradle build output directory
 build
 lib/bin
+
+# Ignore Configuration file
+lib/conf/*.properties

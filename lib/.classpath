@@ -32,6 +32,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
-	<classpathentry kind="lib" path="/klab-rslt-crawler/conf"/>
+	<classpathentry kind="lib" path="conf"/>
 	<classpathentry kind="output" path="bin/default"/>
 </classpath>
