@@ -65,10 +65,10 @@ public class KlabDbRacePage {
 	private String kaisaiCd;
 
 	/** レース番号 */
-	private int raceNo;
+	private Integer raceNo;
 
 	/** レース結果 */
-	private RaceRsltListModel rsltModel;
+	private RaceRsltListModel rsltListModel;
 
 	/** レース払い戻し */
 	private RaceRsltDividendModel dividendModel;
@@ -88,7 +88,7 @@ public class KlabDbRacePage {
 		// URL を取得する
 		this.url = String.format(BASE_URL, kaisaiDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 				+ keibajoNmCdMap.get(kaisaiCd.substring(6, 8)) + String.format("%02d", raceNo));
-		log.debug(this.url);
+		log.debug("url: {}", this.url);
 		// URL へアクセスしてページコンテンツを取得する
 		try {
 			this.document = Jsoup.connect(this.url).timeout(30_000).get();
@@ -104,8 +104,8 @@ public class KlabDbRacePage {
 	 */
 	public KlabDbRacePage parse() {
 		// レース結果を RaceRsltListModel へ設定する
-		this.rsltModel = new RaceRsltListModel(this.kaisaiCd, this.raceNo);
-		this.rsltModel.setRaceRsltList(this.document.select("table.resulttable tbody tr").stream().map(element -> {
+		this.rsltListModel = new RaceRsltListModel(this.kaisaiCd, this.raceNo);
+		this.rsltListModel.setRaceRsltList(this.document.select("table.resulttable tbody tr").stream().map(element -> {
 			Elements cols = element.select("td");
 			RaceRsltModel model = new RaceRsltModel();
 			model.setOrderNo(cols.get(0).text()); // 着順
@@ -125,7 +125,6 @@ public class KlabDbRacePage {
 			model.setHorseWeight(cols.get(14).text()); // 馬体重
 			return model;
 		}).collect(Collectors.toList()));
-		// log.debug(rsltModel.toString());
 
 		// 払い戻しを RaceRsltDividendModel へ設定する
 		this.dividendModel = new RaceRsltDividendModel(this.kaisaiCd, this.raceNo);
@@ -213,7 +212,6 @@ public class KlabDbRacePage {
 				}
 			}
 		});
-		// log.debug(divModel.toString());
 		return this;
 	}
 

@@ -1,21 +1,18 @@
-/**
- * 
- */
 package klab.rslt.crawler.entity;
 
 import klab.rslt.crawler.util.FileUtels;
 import lombok.Value;
 
 /**
- * RACE_RSLT テーブルの Entity クラスです。
+ * RACE_RSLT_DIVIDEND_TRIO テーブルの Entity クラスです。
  * 
  * @author ibaragi
  */
 @Value
-public class RaceRsltEntity {
+public class RaceRsltDividendTrioEntity {
 
 	/** クラスパス上の SQL ファイルパス */
-	private static final String INSERT_SQL_PATH = "sql/insert_race_rslt.sql";
+	private static final String INSERT_SQL_PATH = "sql/insert_race_rslt_dividend_trio.sql";
 
 	/** SQL: insert */
 	private static String insertSql;
@@ -26,11 +23,17 @@ public class RaceRsltEntity {
 	/** レース番号 */
 	private Integer raceNo;
 
-	/** 馬番 */
-	private Integer umaNo;
+	/** 馬番 1 */
+	private Integer umaNo1;
 
-	/** 着順 */
-	private Integer orderNo;
+	/** 馬番 2 */
+	private Integer umaNo2;
+
+	/** 馬番 3 */
+	private Integer umaNo3;
+
+	/** 払戻金 */
+	private Integer dividendYen;
 
 	/**
 	 * このクラスが保持する INSERT 用 SQL を返します。

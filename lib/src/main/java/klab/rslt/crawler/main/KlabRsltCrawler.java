@@ -110,12 +110,15 @@ public class KlabRsltCrawler {
 									KlabDbRacePage page = new KlabDbRacePage(entity.getKaisaiCd(), entity.getKaisaiDt(),
 											entity.getRaceNo()).parse();
 
-									// TODO 取得した情報を DB へ保存する
-									page.getRsltModel().insertRaceRsltList(handle);
+									// 取得した情報を DB へ保存する
+									page.getRsltListModel().insertRaceRsltList(handle);
 									page.getDividendModel().insertaceRsltDividend(handle);
 
-									// 成功件数をカウントアップする
-									successCnt.incrementAndGet();
+									// 成功件数をカウントアップする -> 成功 12 件ごとにコミットする
+									if (successCnt.incrementAndGet() % 12 == 0) {
+										// コミットする
+										handle.commit();
+									}
 								} catch (Exception e) {
 									log.error("処理中にエラーが発生しましたが、処理を続行します。", e);
 									// 5 件以上エラーが発生した場合は終了する

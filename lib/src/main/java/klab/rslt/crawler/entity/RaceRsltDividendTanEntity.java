@@ -7,15 +7,15 @@ import klab.rslt.crawler.util.FileUtels;
 import lombok.Value;
 
 /**
- * RACE_RSLT テーブルの Entity クラスです。
+ * RACE_RSLT_DIVIDEND_TAN テーブルの Entity クラスです。
  * 
  * @author ibaragi
  */
 @Value
-public class RaceRsltEntity {
+public class RaceRsltDividendTanEntity {
 
 	/** クラスパス上の SQL ファイルパス */
-	private static final String INSERT_SQL_PATH = "sql/insert_race_rslt.sql";
+	private static final String INSERT_SQL_PATH = "sql/insert_race_rslt_dividend_tan.sql";
 
 	/** SQL: insert */
 	private static String insertSql;
@@ -29,8 +29,8 @@ public class RaceRsltEntity {
 	/** 馬番 */
 	private Integer umaNo;
 
-	/** 着順 */
-	private Integer orderNo;
+	/** 払戻金 */
+	private Integer dividendYen;
 
 	/**
 	 * このクラスが保持する INSERT 用 SQL を返します。

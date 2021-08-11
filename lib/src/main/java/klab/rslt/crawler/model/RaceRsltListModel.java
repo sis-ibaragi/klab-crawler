@@ -43,11 +43,12 @@ public class RaceRsltListModel {
 	}
 
 	/**
-	 * RaceRsltModel の List を RACE_RSLT テーブルへ登録します。
+	 * RaceRsltModel の List を RACE_RSLT テーブルへレコードを登録します。
+	 * 
+	 * @param handle Handle
 	 */
 	public void insertRaceRsltList(Handle handle) {
 		this.raceRsltList.forEach(model -> {
-			// TODO 未実装
 			log.debug("Insert: {}", model.toString());
 			// INSERT を実行する
 			handle.createUpdate(RaceRsltEntity.getInsertSql())
