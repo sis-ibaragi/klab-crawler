@@ -120,7 +120,7 @@ public class KlabRsltCrawler {
 								try {
 									// 対象 Web ページを解析してレース結果・払戻金を取得する
 									KlabDbRacePage page = new KlabDbRacePage(entity.getKaisaiCd(), entity.getKaisaiDt(),
-											entity.getRaceNo()).parse();
+											entity.getRaceNo()).connect().parse();
 
 									// 取得した情報を DB へ保存する
 									page.getRsltListModel().insertRaceRsltList(handle);
@@ -135,18 +135,21 @@ public class KlabRsltCrawler {
 										// コミット待ち件数を初期化する
 										uncommitedCnt.set(0);
 									}
-								} catch (Exception e) {
+								} catch (IOException e) {
 									// エラー内容をログ出力する
 									log.error("処理中にエラーが発生しましたが、処理を続行します。", e);
 									// エラー件数をカウントアップする
 									failureCnt.incrementAndGet();
 									// 一定件数以上の HTTP エラーが発生した場合は終了する
-									if (e.getCause() instanceof IOException) {
-										if (httpErrorCnt.incrementAndGet() >= httpErrorThresholdCnt) {
-											throw new RuntimeException(String.format(
-													"処理中に %d 件以上の HTTP エラーが発生したため終了します。", httpErrorThresholdCnt));
-										}
+									if (httpErrorCnt.incrementAndGet() >= httpErrorThresholdCnt) {
+										throw new RuntimeException(String.format("処理中に %d 件以上の HTTP エラーが発生したため終了します。",
+												httpErrorThresholdCnt));
 									}
+								} catch (Exception e) {
+									// エラー内容をログ出力する
+									log.error("処理中にエラーが発生しましたが、処理を続行します。", e);
+									// エラー件数をカウントアップする
+									failureCnt.incrementAndGet();
 								} finally {
 									// ページアクセスごとにスリープする
 									try {

@@ -89,12 +89,18 @@ public class KlabDbRacePage {
 		this.url = String.format(BASE_URL, kaisaiDt.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
 				+ keibajoNmCdMap.get(kaisaiCd.substring(6, 8)) + String.format("%02d", raceNo));
 		log.debug("url: {}", this.url);
+	}
+
+	/**
+	 * 対象ページへアクセスします。
+	 * 
+	 * @return このクラスのインスタンス
+	 * @throws IOException HTTP 接続時にエラーが発生した場合
+	 */
+	public KlabDbRacePage connect() throws IOException {
 		// URL へアクセスしてページコンテンツを取得する
-		try {
-			this.document = Jsoup.connect(this.url).timeout(30_000).get();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		this.document = Jsoup.connect(this.url).timeout(30_000).get();
+		return this;
 	}
 
 	/**
@@ -103,6 +109,11 @@ public class KlabDbRacePage {
 	 * @return このクラスのインスタンス
 	 */
 	public KlabDbRacePage parse() {
+		// Docmuent が未取得の場合はエラーとする
+		if (this.document == null) {
+			throw new RuntimeException("対象 Web ページの Document が未取得です。");
+		}
+
 		// レース結果を RaceRsltListModel へ設定する
 		this.rsltListModel = new RaceRsltListModel(this.kaisaiCd, this.raceNo);
 		this.rsltListModel.setRaceRsltList(this.document.select("table.resulttable tbody tr").stream().map(element -> {
