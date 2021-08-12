@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.jdbi.v3.core.Handle;
 
+import klab.rslt.crawler.entity.RaceEntity;
 import klab.rslt.crawler.entity.RaceRsltEntity;
 import lombok.Data;
 import lombok.NonNull;
@@ -54,5 +55,16 @@ public class RaceRsltListModel {
 			handle.createUpdate(RaceRsltEntity.getInsertSql()).bindBean(new RaceRsltEntity(this.kaisaiCd, this.raceNo,
 					model.getUmaNoInt(), model.getOrderNoInt(), model.getRaceRsltDiv())).execute();
 		});
+	}
+
+	/**
+	 * RACE テーブルの RACE_RSLT_DONE_FLG を ON に更新します。
+	 * 
+	 * @param handle Handle
+	 */
+	public void updateRaceRsltDoneFlg(Handle handle) {
+		// UPDATE を実行する
+		handle.createUpdate(RaceEntity.getUpdateSql())
+				.bindBean(new RaceEntity(this.kaisaiCd, this.raceNo, Boolean.TRUE)).execute();
 	}
 }

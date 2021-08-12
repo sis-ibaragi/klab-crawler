@@ -123,6 +123,7 @@ public class KlabRsltCrawler {
 									// 取得した情報を DB へ保存する
 									page.getRsltListModel().insertRaceRsltList(handle);
 									page.getDividendModel().insertaceRsltDividend(handle);
+									page.getRsltListModel().updateRaceRsltDoneFlg(handle);
 
 									// コミットする
 									handle.commit();
