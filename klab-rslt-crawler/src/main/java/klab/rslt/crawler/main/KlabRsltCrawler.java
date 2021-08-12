@@ -98,18 +98,16 @@ public class KlabRsltCrawler {
 		Jdbi jdbi = Jdbi.create(this.dbProperties.getDatabase(), this.dbProperties.getUsername(),
 				this.dbProperties.getPassword());
 
-		// 各種閾値
-		final int commitThresholdCnt = 12;
+		// 強制終了とする HTTP エラー件数閾値
 		final int httpErrorThresholdCnt = 5;
-
-		// ページアクセスごとのスリープ間隔
-		final long sleepMsec = 2_000;
-
 		// 成功・失敗・コミット待ち件数のカウンター
 		AtomicInteger successCnt = new AtomicInteger();
 		AtomicInteger failureCnt = new AtomicInteger();
-		AtomicInteger uncommitedCnt = new AtomicInteger();
 		AtomicInteger httpErrorCnt = new AtomicInteger();
+
+		// ページアクセスごとのスリープ間隔ミリ秒
+		final long sleepMsec = 3_000;
+
 		try {
 			jdbi.useHandle(handle -> {
 				handle.useTransaction(h -> {
@@ -126,30 +124,24 @@ public class KlabRsltCrawler {
 									page.getRsltListModel().insertRaceRsltList(handle);
 									page.getDividendModel().insertaceRsltDividend(handle);
 
-									// コミット待ち件数をカウントアップする -> 一定件数ごとにコミットする
-									if (uncommitedCnt.incrementAndGet() >= commitThresholdCnt) {
-										// コミットする
-										handle.commit();
-										// 成功件数をカウントアップする
-										successCnt.addAndGet(uncommitedCnt.get());
-										// コミット待ち件数を初期化する
-										uncommitedCnt.set(0);
-									}
-								} catch (IOException e) {
-									// エラー内容をログ出力する
-									log.error("処理中にエラーが発生しましたが、処理を続行します。", e);
-									// エラー件数をカウントアップする
-									failureCnt.incrementAndGet();
-									// 一定件数以上の HTTP エラーが発生した場合は終了する
-									if (httpErrorCnt.incrementAndGet() >= httpErrorThresholdCnt) {
-										throw new RuntimeException(String.format("処理中に %d 件以上の HTTP エラーが発生したため終了します。",
-												httpErrorThresholdCnt));
-									}
+									// コミットする
+									handle.commit();
+									// 成功件数をカウントアップする
+									successCnt.incrementAndGet();
 								} catch (Exception e) {
 									// エラー内容をログ出力する
 									log.error("処理中にエラーが発生しましたが、処理を続行します。", e);
+									// ロールバックする
+									handle.rollback();
 									// エラー件数をカウントアップする
 									failureCnt.incrementAndGet();
+									// 一定件数以上の HTTP エラーが発生した場合は終了する
+									if (e instanceof IOException) {
+										if (httpErrorCnt.incrementAndGet() >= httpErrorThresholdCnt) {
+											throw new RuntimeException(String.format(
+													"処理中に %d 件以上の HTTP エラーが発生したため終了します。", httpErrorThresholdCnt));
+										}
+									}
 								} finally {
 									// ページアクセスごとにスリープする
 									try {
@@ -160,19 +152,15 @@ public class KlabRsltCrawler {
 									}
 								}
 							});
-					// コミットする
-					handle.commit();
-					// 成功件数をカウントアップする
-					successCnt.addAndGet(uncommitedCnt.get());
 				});
 			});
 		} finally {
 			// 成功・失敗件数をログに出力する
 			if (failureCnt.intValue() == 0) {
-				log.info("成功件数: {} 件, 失敗件数: {} 件（うち HTTP エラー件数: {} 件）", successCnt.get(), failureCnt.get(),
+				log.info("成功レース数: {} 件, 失敗レース数: {} 件（うち HTTP エラーレース数: {} 件）", successCnt.get(), failureCnt.get(),
 						httpErrorCnt.get());
 			} else {
-				log.warn("成功件数: {} 件, 失敗件数: {} 件（うち HTTP エラー件数: {} 件）", successCnt.get(), failureCnt.get(),
+				log.warn("成功レース数: {} 件, 失敗レース数: {} 件（うち HTTP エラーレース数: {} 件）", successCnt.get(), failureCnt.get(),
 						httpErrorCnt.get());
 			}
 		}
