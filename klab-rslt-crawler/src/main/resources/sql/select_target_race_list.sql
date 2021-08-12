@@ -1,4 +1,3 @@
--- サンプル SQL
 select
 	ka.KAISAI_CD,
 	ka.KAISAI_DT,
@@ -8,15 +7,8 @@ from
 	inner join RACE ra
 		on	ka.KAISAI_CD = ra.KAISAI_CD
 where
-	not exists (
-		select
-			1
-		from
-			RACE_RSLT rs
-		where
-				rs.KAISAI_CD = ka.KAISAI_CD
-			and rs.RACE_NO = ra.RACE_NO
-	)
+		ra.RACE_RSLT_DONE_FLG = 0
+	and	ra.RACE_CANCEL_FLG = 0
 order by
 	KAISAI_CD,
 	RACE_NO
