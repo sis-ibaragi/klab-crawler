@@ -48,7 +48,6 @@ dependencies {
 }
 
 tasks.named('jar') {
-    baseName = 'jra-odds-crawler'
     manifest {
         attributes 'Main-Class' : 'klab.rslt.crawler.main.KlabRsltCrawler'
         attributes 'Class-Path' : '../conf/'
