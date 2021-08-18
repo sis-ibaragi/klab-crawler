@@ -98,15 +98,13 @@ public class KlabDbRacePage {
 	 * @throws IOException HTTP 接続時にエラーが発生した場合
 	 */
 	public KlabDbRacePage connect() throws IOException {
-		// URL へアクセスしてページコンテンツを取得する
-		this.document = Jsoup.connect(this.url).timeout(30_000).get();
-		return this;
+		return this.connect(0, 0);
 	}
 
 	/**
 	 * 対象ページへアクセスします。
 	 * 
-	 * @param retryCnt リトライ回数
+	 * @param retryCnt     リトライ回数
 	 * @param intervalMsec リトライ間隔（ミリ秒）
 	 * @return このクラスのインスタンス
 	 * @throws IOException HTTP 接続時にエラーが発生した場合
