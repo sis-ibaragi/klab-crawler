@@ -98,8 +98,37 @@ public class KlabDbRacePage {
 	 * @throws IOException HTTP 接続時にエラーが発生した場合
 	 */
 	public KlabDbRacePage connect() throws IOException {
+		return this.connect(0, 0);
+	}
+
+	/**
+	 * 対象ページへアクセスします。
+	 * 
+	 * @param retryCnt     リトライ回数
+	 * @param intervalMsec リトライ間隔（ミリ秒）
+	 * @return このクラスのインスタンス
+	 * @throws IOException HTTP 接続時にエラーが発生した場合
+	 */
+	public KlabDbRacePage connect(int retryCnt, final int intervalMsec) throws IOException {
 		// URL へアクセスしてページコンテンツを取得する
-		this.document = Jsoup.connect(this.url).timeout(30_000).get();
+		try {
+			this.document = Jsoup.connect(this.url).timeout(30_000).get();
+		} catch (IOException ioe) {
+			// リトライ回数に残ありの場合
+			if (retryCnt > 0) {
+				log.warn(String.format("ページアクセス時にエラーが発生しましたが、%d ミリ秒後に %d 回リトライします", intervalMsec, retryCnt), ioe);
+				// リトライ前に指定ミリ秒だけスリープする
+				try {
+					Thread.sleep(intervalMsec);
+				} catch (InterruptedException e) {
+					// ここでのエラーは無視する
+					log.warn("Thred.sleep でエラーが発生しました。", e);
+				}
+				// リトライ回数を減らして再起呼び出し
+				this.connect(--retryCnt, intervalMsec);
+			}
+			throw ioe;
+		}
 		return this;
 	}
 
