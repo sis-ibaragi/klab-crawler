@@ -100,13 +100,16 @@ public class KlabRsltCrawler {
 
 		// 強制終了とする HTTP エラー件数閾値
 		final int httpErrorThresholdCnt = 5;
+
 		// 成功・失敗・コミット待ち件数のカウンター
 		AtomicInteger successCnt = new AtomicInteger();
 		AtomicInteger failureCnt = new AtomicInteger();
 		AtomicInteger httpErrorCnt = new AtomicInteger();
 
-		// ページアクセスごとのスリープ間隔ミリ秒
-		final long sleepMsec = 3_000;
+		// リトライ回数
+		final int retryCnt = 5;
+		// リトライごとのスリープ間隔ミリ秒
+		final int intervalMsec = 10_000;
 
 		try {
 			jdbi.useHandle(handle -> {
@@ -118,7 +121,7 @@ public class KlabRsltCrawler {
 								try {
 									// 対象 Web ページを解析してレース結果・払戻金を取得する
 									KlabDbRacePage page = new KlabDbRacePage(entity.getKaisaiCd(), entity.getKaisaiDt(),
-											entity.getRaceNo()).connect().parse();
+											entity.getRaceNo()).connect(retryCnt, intervalMsec).parse();
 
 									// 取得した情報を DB へ保存する
 									page.getRsltListModel().insertRaceRsltList(handle);
@@ -142,14 +145,6 @@ public class KlabRsltCrawler {
 											throw new RuntimeException(String.format(
 													"処理中に %d 件以上の HTTP エラーが発生したため終了します。", httpErrorThresholdCnt));
 										}
-									}
-								} finally {
-									// ページアクセスごとにスリープする
-									try {
-										Thread.sleep(sleepMsec);
-									} catch (InterruptedException e) {
-										// ここでのエラーは無視する
-										log.warn("Thred.sleep でエラーが発生しました。", e);
 									}
 								}
 							});
